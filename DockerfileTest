@@ -1,0 +1,16 @@
+# Użyj oficjalnego obrazu narzędzia git do pobierania z GitHuba
+FROM alpine:3.14
+
+# Instaluj git
+RUN apk add --no-cache git openssh-client
+
+
+RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts 
+# Sklonuj repozytorium z GitHuba
+RUN --mount=type=ssh,id=hpl21git git clone git@github.com:s97640/zadanie1.git temp
+
+WORKDIR /temp
+
+CMD ["sh", "-c", "ls -la"]
+
+# Możesz dalej rozwijać ten Dockerfile według potrzeb testów.
