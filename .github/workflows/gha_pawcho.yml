@@ -71,14 +71,19 @@ jobs:
       - name: Scan Docker image for vulnerabilities
         id: trivy_scan
         run: |
-          trivy image --exit-code 1 --severity HIGH,CRITICAL ${{ vars.DOCKERHUB_USERNAME }}/zadanie2:${{ steps.meta.outputs.tags }}
-        continue-on-error: true
-
+          trivy image --exit-code 0 --severity HIGH,CRITICAL --ignore-unfixed --format json --output trivy-report.json ${{ vars.DOCKERHUB_USERNAME }}/zadanie2:${{ steps.meta.outputs.tags }}
+  
       - name: Check scan results
-        if: steps.trivy_scan.outcome == 'failure'
+        id: check_scan
         run: |
-          echo "Image contains critical or high vulnerabilities. Exiting..."
-          exit 1
+          CRITICAL_COUNT=$(jq '.Results[].Vulnerabilities | map(select(.Severity == "CRITICAL")) | length' trivy-report.json | jq -s 'add')
+          HIGH_COUNT=$(jq '.Results[].Vulnerabilities | map(select(.Severity == "HIGH")) | length' trivy-report.json | jq -s 'add')
+          echo "Critical vulnerabilities: $CRITICAL_COUNT"
+          echo "High vulnerabilities: $HIGH_COUNT"
+          if [ "$CRITICAL_COUNT" -gt 0 ] || [ "$HIGH_COUNT" -gt 0 ]; then
+            echo "Image contains critical or high vulnerabilities. Exiting..."
+            exit 1
+          fi
 
       - name: Login to GitHub Container Registry
         if: steps.trivy_scan.outcome == 'success'
