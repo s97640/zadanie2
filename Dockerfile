@@ -16,6 +16,9 @@ RUN apk update && \
     git && \
     rm -rf /etc/apk/cache
 
+# Skanowanie kluczy publicznych github
+RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts 
+
 # Klonowanie repozytorium z kodem aplikacji za pomocą klucza prywatnego
 RUN --mount=type=ssh,id=hpl21git git clone git@github.com:s97640/zadanie1.git tempDir
 

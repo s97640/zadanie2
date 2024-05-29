@@ -38,11 +38,9 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Set up SSH
-        uses: MrSquaare/ssh-setup-action@2d028b70b5e397cf8314c6eaea229a6c3e34977a # v3.1.0
+        uses: webfactory/ssh-agent@v0.9.0
         with:
-          host: github.com
-          private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          private-key-name: hpl21git
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -54,7 +52,7 @@ jobs:
           build-args:
             VERSION=1.0
           ssh:
-            default
+            default=${{ env.SSH_AUTH_SOCK }}
           cache-from:
             type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/zadanie2:cache 
           cache-to:
