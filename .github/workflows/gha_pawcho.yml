@@ -52,7 +52,7 @@ jobs:
           build-args:
             VERSION=1.0
           ssh:
-            default=${{ env.SSH_AUTH_SOCK }}
+            hpl21git=${{ env.SSH_AUTH_SOCK }}
           cache-from:
             type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/zadanie2:cache 
           cache-to:
