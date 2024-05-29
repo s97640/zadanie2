@@ -53,6 +53,8 @@ jobs:
           push: true
           build-args:
             VERSION=1.0
+          ssh:
+            default
           cache-from:
             type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/zadanie2:cache 
           cache-to:
