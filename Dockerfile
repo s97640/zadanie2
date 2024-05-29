@@ -36,7 +36,7 @@ ARG VERSION
 ENV VERSION=${VERSION:-v0.1}
 
 # Metadane obrazu
-LABEL org.opencontainers.image.title="Zadanie 1"
+LABEL org.opencontainers.image.title="Zadanie 2"
 LABEL org.opencontainers.image.authors="Jakub Kopacki"
 LABEL org.opencontainers.image.version="$VERSION"
 
